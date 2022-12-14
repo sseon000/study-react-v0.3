@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+// Controller 레이어는 주로 HTTP 요청과 응답을 어떻게 넘겨받고 리턴하느냐, 즉 외부 세계와 통신하는 규약을 정의했다.
+
 @RestController
 @RequestMapping("todo")
 public class TodoController {

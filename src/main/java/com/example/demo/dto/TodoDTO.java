@@ -15,7 +15,7 @@ public class TodoDTO { // Todo아이템을 생성, 수정, 삭제
     private String userId;
     private boolean done;
 
-    public TodoDTO(final TodoEntity<?> entity) {
+    public TodoDTO(final TodoEntity entity) {
         this.id = entity.getId();
         this.userId = entity.getUserid();;
         this.done = entity.isDone();
