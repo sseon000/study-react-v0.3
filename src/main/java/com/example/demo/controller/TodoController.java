@@ -43,6 +43,7 @@ public class TodoController {
             String temporaryUserId = "temporary-user";
 
             // 1. 사용자로부터 받은 파라미터 TodoDTO -> TodoEntity로 변환
+            // HTTP응답 반환시 비즈니스 로직을 캡슐화하거나 추가적인 정보를 함께 반환하는 용도 2022.12.25 KSH
             TodoEntity entity = TodoDTO.toEntity(dto);
 
             // 2. id를 null로 초기화한다. 생성 당시에는 id가 없어야 하기 때문
@@ -70,5 +71,27 @@ public class TodoController {
             ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().error(error).build();
             return ResponseEntity.badRequest().body(response);
         }
+    }
+
+    /* 2022.12.25 KSH 추가
+     * 목록 조회
+     */
+    @GetMapping
+    public ResponseEntity<?> retrieveTodoList() {
+        String temporaryUserId = "temporary-user";
+
+        // (1) 서비스 메서드의 retrieve() 메서드를 사용해 Todo 리스트를 가져온다.
+        List<TodoEntity> entities = service.retrieve(temporaryUserId);
+
+        // (2) 자바 스트림을 이용해 리턴된 엔티티 리스트를 TodoDTO 리스트로 변환한다.
+        // 뭔지 더 알아 봅시다...
+        List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+
+        // (3) 변환된 TodoDTO 리스트를 이용해 ResponseDTO를 초기화한다.
+        ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+
+        // (4) ResponseDTO를 리턴한다.
+        return ResponseEntity.ok().body(response);
+
     }
 }

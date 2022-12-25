@@ -56,4 +56,11 @@ public class TodoService {
         return repository.findByUserId(entity.getUserId());
     }
 
+    /* 2022.12.25 KSH 추가
+     * 목록 조회
+     */
+    public List<TodoEntity> retrieve(final String userID) {
+        log.info("retrieve : ",repository.findByUserId(userID));
+        return repository.findByUserId(userID);
+    }
 }
