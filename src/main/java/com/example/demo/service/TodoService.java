@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 // Service 레이어는 HTTP나 데이터베이스 같은 외부 컴포넌트로부터 추상화돼 우리가 온전히 비즈니스 로직에만 집중할 수 있었다.
 
@@ -62,5 +63,28 @@ public class TodoService {
     public List<TodoEntity> retrieve(final String userID) {
         log.info("retrieve : ",repository.findByUserId(userID));
         return repository.findByUserId(userID);
+    }
+
+    /* 2022.12.26 KSH 추가
+     * 업데이트
+     */
+    public List<TodoEntity> update(final TodoEntity entity) {
+        // (1) 저장할 엔티티가 유요한지 확인한다.
+        validate(entity);
+
+        // (2) 넘겨받은 엔티티 id를 이용해 TodoEntity를 가져온다. 존재하지 않는 엔티티는 업데이트할 수 없기 때문
+        final Optional<TodoEntity> original = repository.findById(entity.getId());
+
+        original.ifPresent(todo -> {
+            // (3) 반환된 TodoEntity가 존재하면 값을 새 entity 값으로 덮어 씌운다
+            todo.setTitle(entity.getTitle());
+            todo.setDone(entity.isDone());
+
+            // (4) 데이터베이스에 새 값을 저장한다.
+            repository.save(todo);
+        });
+
+        // 전체 Todo 리스트 리턴
+        return retrieve(entity.getUserId());
     }
 }
