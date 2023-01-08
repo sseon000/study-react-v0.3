@@ -41,6 +41,8 @@ public class UserController {
                     .username(registerUser.getUsername())
                     .build();
 
+            //log.info("responseUserDTO : " + responseUserDTO);
+
             return ResponseEntity.ok().body(responseUserDTO);
         } catch (Exception e) {
             // 사용자 정보는 항상 하나이므로 리스트로 만들어야 하는 ResponseDTO를 사용하지 않고 그냥 UserDTO 리턴
@@ -59,8 +61,8 @@ public class UserController {
         if (user != null) {
             final String token = tokenProvider.create(user);
             final UserDTO responseUserDTO = UserDTO.builder()
-                    //email(user.getUsername()) // 예제
-                    .email(user.getEmail())
+                    .email(user.getUsername()) // 예제
+                    //.email(user.getEmail())
                     .id(user.getId())
                     .token(token)
                     .build();

@@ -1,9 +1,7 @@
 package com.example.demo.security;
 
 import com.example.demo.model.UserEntity;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +31,8 @@ public class TokenProvider {
           "exp":1596597657
         }.
         // SECRET_KEY를 이용해 서명한 부분
-         Nn4d1MOVLZg79sfFACTIpCPKqWmpZMZQsbNrXdJJNWkRv50_l7bPLQPwhMobT4vBOG6Q3JYjhDrKF1BSaUxZOg
-         */
+        Nn4d1MOVLZg79sfFACTIpCPKqWmpZMZQsbNrXdJJNWkRv50_l7bPLQPwhMobT4vBOG6Q3JYjhDrKF1BSaUxZOg
+        */
         // JWT Token 생성
         return Jwts.builder()
             // header에 들어갈 내용 및 서명을 하기 위한 SECRET_KEY
@@ -53,10 +51,12 @@ public class TokenProvider {
         // 위조되지 않았다면 페이로드(Claims) 리턴, 위조라면 예외를 날림
         // 그 중 우리는 userId가 필요하므로 getBody를 부른다
         Claims claims = Jwts.parser()
-            .setSigningKey(SECRET_KEY)
-            .parseClaimsJws(token)
-            .getBody();
-
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody();
         return claims.getSubject();
+
+
     }
 }
+
