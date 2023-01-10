@@ -6,6 +6,7 @@ import com.example.demo.model.TodoEntity;
 import com.example.demo.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -38,7 +39,9 @@ public class TodoController {
     *
     */
     @PostMapping
-    public ResponseEntity<?> createTodo(@RequestBody TodoDTO dto) {
+    public ResponseEntity<?> createTodo(
+            //@AuthenticationPrincipal String userId, // 2023.01.10 KSH 유저인증 추가
+            @RequestBody TodoDTO dto) {
         try {
             String temporaryUserId = "temporary-user";
 
@@ -50,7 +53,9 @@ public class TodoController {
             entity.setId(null);
 
             // 3. 임시 사용자 아이디를 설정해 준다. 추후 유저 인증, 인가 로직 구현
+            // temporaryUserId -> @AuthenticationPrincipal String userId 사용 예정
             entity.setUserId(temporaryUserId);
+            //entity.setUserId(userId); // 2023.01.10 KSH 유저인증 추가
 
             // 4. 서비스를 이용해 TodoEntity 생성
             List<TodoEntity> entities = service.create(entity);
@@ -77,10 +82,14 @@ public class TodoController {
      * 목록 조회
      */
     @GetMapping
-    public ResponseEntity<?> retrieveTodoList() {
+    public ResponseEntity<?> retrieveTodoList(
+            //@AuthenticationPrincipal String userId, // 2023.01.10 KSH 유저인증 추가
+    ) {
+        // 삭제 예정 2023.01.10 KSH 추가
         String temporaryUserId = "temporary-user";
 
         // (1) 서비스 메서드의 retrieve() 메서드를 사용해 Todo 리스트를 가져온다.
+        //List<TodoEntity> entities = service.retrieve(userId); // 2023.01.10 KSH 유저인증 추가
         List<TodoEntity> entities = service.retrieve(temporaryUserId);
 
         // (2) 자바 스트림을 이용해 리턴된 엔티티 리스트를 TodoDTO 리스트로 변환한다.
@@ -98,13 +107,17 @@ public class TodoController {
      * 업데이트
      */
     @PutMapping
-    public ResponseEntity<?> updateTodo(@RequestBody TodoDTO dto) {
+    public ResponseEntity<?> updateTodo(
+            //@AuthenticationPrincipal String userId, // 2023.01.10 KSH 유저인증 추가
+            @RequestBody TodoDTO dto) {
+        // 삭제 예정 2023.01.10 KSH 추가
         String temporaryUserId = "temporary-user";
 
         // (1) dto를 entity로 변환한다.
         TodoEntity entity = TodoDTO.toEntity(dto);
 
         // (2) id를 temporaryUserId로 초기화한다. 여기는 4장 인증과 인가에서 수정할 예정
+        //List<TodoEntity> entities = service.retrieve(userId); // 2023.01.10 KSH 유저인증 추가
         entity.setUserId(temporaryUserId);
 
         // (3) 서비스를 이용해 entity를 업데이트한다.
@@ -124,14 +137,18 @@ public class TodoController {
      * 삭제
      */
     @DeleteMapping
-    public ResponseEntity<?> deleteTodo(@RequestBody TodoDTO dto) {
+    public ResponseEntity<?> deleteTodo(
+            //@AuthenticationPrincipal String userId, // 2023.01.10 KSH 유저인증 추가
+            @RequestBody TodoDTO dto) {
         try {
+            // 삭제 예정 2023.01.10 KSH 추가
             String temporaryUserId = "temporary-user";
 
             // (1) dto를 entity로 변환한다.
             TodoEntity entity = TodoDTO.toEntity(dto);
 
             // (2) id를 temporaryUserId로 초기화한다. 여기는 4장 인증과 인가에서 수정할 예정
+            //List<TodoEntity> entities = service.retrieve(userId); // 2023.01.10 KSH 유저인증 추가
             entity.setUserId(temporaryUserId);
 
             // (3) 서비스를 이용해 entity를 삭제한다.
